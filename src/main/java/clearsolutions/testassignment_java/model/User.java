@@ -10,6 +10,7 @@ import java.util.Date;
 public class User {
     @Email
     @NotNull
+    @Pattern(regexp=".+@.+\\..+")
     private String email;
     @NotNull
     private String firstName;

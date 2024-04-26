@@ -4,14 +4,15 @@ import clearsolutions.testassignment_java.model.User;
 import clearsolutions.testassignment_java.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/user")
 public class UserController {
 
     @Autowired
@@ -37,11 +38,11 @@ public class UserController {
         userService.deleteUser(email);
     }
 
-    @GetMapping("/search")
-    public List<User> searchUsers(@RequestParam Date from, @RequestParam Date to) {
-        if (from.after(to)) {
-            throw new IllegalArgumentException("'From' date must be before 'To' date");
-        }
-        return userService.searchUsers(from, to);
+    @GetMapping("/search") // Mapping for the search endpoint
+    public ResponseEntity<List<User>> searchUsers(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date from,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date to) {
+        List<User> users = userService.searchUsers(from, to);
+        return ResponseEntity.ok(users);
     }
 }
